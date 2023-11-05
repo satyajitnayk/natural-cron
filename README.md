@@ -71,8 +71,16 @@ const schedule = new  CronExpressionBuilder();
 - `duringMonths(months: Array<number>): this`
 - `compile(): string` - Get the cron expression
 
+
+#### Use `CronTimeUnit` enum for `ScheduleUnit`
 ```typescript
-export type ScheduleUnit = 'minute' | 'hour' | 'dayOfMonth' | 'month' | 'dayOfWeek' ;
+export enum CronTimeUnit {
+  Minute = 'minute',
+  Hour = 'hour',
+  DayOfMonth = 'dayOfMonth',
+  Month = 'month',
+  DayOfWeek = 'dayOfWeek',
+}
 ```
 
 #### CronValidators
