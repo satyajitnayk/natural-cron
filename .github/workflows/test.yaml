@@ -1,0 +1,42 @@
+name: Publish Package to npmjs
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Update version
+        run: |
+          # update version in package.json with release version
+          sed -i 's/"version": "[0-9]*\.[0-9]*\.[0-9]*"/"version": "'$VERSION'"/g' package.json
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: lint
+        run: ./node_modules/.bin/prettier --check **/*.ts
+
+      - run: tsc
+
+      - run: npm run test
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish
