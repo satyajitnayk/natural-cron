@@ -6,7 +6,9 @@ export class CronValidators {
    */
   static validateMinute(minute: number): void {
     if (!Number.isInteger(minute) || minute < 0 || minute > 59) {
-      throw new Error(`Invalid minute: ${minute}. Minute should be between 0 and 59.`);
+      throw new Error(
+        `Invalid minute: ${minute}. Minute should be between 0 and 59.`,
+      );
     }
   }
 
@@ -17,7 +19,9 @@ export class CronValidators {
    */
   static validateHour(hour: number): void {
     if (!Number.isInteger(hour) || hour < 0 || hour > 23) {
-      throw new Error(`Invalid hour: ${hour}. Hour should be between 0 and 23.`);
+      throw new Error(
+        `Invalid hour: ${hour}. Hour should be between 0 and 23.`,
+      );
     }
   }
 
@@ -28,7 +32,9 @@ export class CronValidators {
    */
   static validateDayOfMonth(day: number): void {
     if (!Number.isInteger(day) || day < 1 || day > 31) {
-      throw new Error(`Invalid day of month: ${day}. Day should be between 1 and 31.`);
+      throw new Error(
+        `Invalid day of month: ${day}. Day should be between 1 and 31.`,
+      );
     }
   }
 
@@ -39,7 +45,9 @@ export class CronValidators {
    */
   static validateMonth(month: number): void {
     if (!Number.isInteger(month) || month < 1 || month > 12) {
-      throw new Error(`Invalid month: ${month}. Month should be between 1 and 12.`);
+      throw new Error(
+        `Invalid month: ${month}. Month should be between 1 and 12.`,
+      );
     }
   }
 
@@ -50,7 +58,9 @@ export class CronValidators {
    */
   static validateDayOfWeek(day: number): void {
     if (!Number.isInteger(day) || day < 0 || day > 6) {
-      throw new Error(`Invalid day of week: ${day}. Day should be between 0 (Sunday) and 6 (Saturday).`);
+      throw new Error(
+        `Invalid day of week: ${day}. Day should be between 0 (Sunday) and 6 (Saturday).`,
+      );
     }
   }
 
