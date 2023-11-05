@@ -1,0 +1,39 @@
+name: release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish_release_artifacts:
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ github.event.release.tag_name }}
+    permissions:
+      packages: write
+      contents: read
+    strategy:
+      matrix:
+        node: [ '18' ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        id: setup-node
+        with:
+          cache: 'npm'
+          node-version: ${{ matrix.node }}
+
+      - name: replace_version
+        run: |
+          # update version in package.json with release version
+          sed -i 's/"version": "1.0.0"/"version": "'$VERSION'"/g' package.json
+
+      - run: npm ci
+      - name: lint
+        run: ./node_modules/.bin/prettier --check **/*.ts
+      - run: tsc
+      - run: npm run test
+      - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
