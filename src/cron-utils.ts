@@ -1,4 +1,4 @@
-import {Schedule} from "./interfaces";
+import { Schedule } from './interfaces';
 
 export class CronUtils {
   /**
@@ -41,7 +41,11 @@ export class CronUtils {
    * @param {string} field - The key to check in the schedule.
    * @param {string | number} defaultValue - The default value to set if the key is undefined.
    */
-  static setDefault(schedule: Schedule, field: string, defaultValue: string | number): void {
+  static setDefault(
+    schedule: Schedule,
+    field: string,
+    defaultValue: string | number,
+  ): void {
     if (schedule[field] === undefined) {
       schedule[field] = defaultValue;
     }

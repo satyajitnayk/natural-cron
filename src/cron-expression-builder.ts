@@ -1,6 +1,11 @@
-import {Schedule, ScheduleUnit, CronTimeUnit, ScheduleValue} from "./interfaces";
-import {CronValidators} from "./cron-validators";
-import {CronUtils} from "./cron-utils";
+import {
+  Schedule,
+  ScheduleUnit,
+  CronTimeUnit,
+  ScheduleValue,
+} from './interfaces';
+import { CronValidators } from './cron-validators';
+import { CronUtils } from './cron-utils';
 
 /**
  * Class to construct a cron expression with a fluent API.
@@ -29,14 +34,13 @@ export class CronExpressionBuilder {
     CronUtils.setDefault(this.schedule, 'dayOfWeek', '*');
   }
 
-
   /**
    * Sets the job to run at specific minutes.
    * @param {Array<number>} minutes - Minute(s) at which the job should run.
    * @returns {this} The instance of CronExpressionBuilder for chaining.
    */
   atMinutes(minutes: Array<number>): this {
-    minutes.forEach(minute => CronValidators.validateMinute(minute));
+    minutes.forEach((minute) => CronValidators.validateMinute(minute));
     this.schedule.minute = CronUtils.formatCronPart(minutes);
     return this;
   }
@@ -47,7 +51,7 @@ export class CronExpressionBuilder {
    * @returns {this} The instance of CronExpressionBuilder for chaining.
    */
   atHours(hours: number[]): this {
-    hours.forEach(hour => CronValidators.validateHour(hour));
+    hours.forEach((hour) => CronValidators.validateHour(hour));
     this.schedule.hour = CronUtils.formatCronPart(hours);
     // Set the minutes to '0' if they haven't been defined yet
     if (this.schedule.minute === undefined) {
@@ -181,7 +185,7 @@ export class CronExpressionBuilder {
    * @param {Array<number>} days - Day(s) of the week.
    */
   onWeekDays(days: Array<number>): this {
-    days.forEach(day => CronValidators.validateDayOfWeek(day));
+    days.forEach((day) => CronValidators.validateDayOfWeek(day));
     this.schedule.dayOfWeek = CronUtils.formatCronPart(days);
     return this;
   }
@@ -192,7 +196,7 @@ export class CronExpressionBuilder {
    * @returns {this} The instance of CronExpressionBuilder for chaining.
    */
   onDaysOfMonth(days: Array<number>): this {
-    days.forEach(day => CronValidators.validateDayOfMonth(day));
+    days.forEach((day) => CronValidators.validateDayOfMonth(day));
     this.schedule.dayOfMonth = CronUtils.formatCronPart(days);
     return this;
   }
@@ -203,7 +207,7 @@ export class CronExpressionBuilder {
    * @returns {this} The instance of CronExpressionBuilder for chaining.
    */
   duringMonths(months: Array<number>): this {
-    months.forEach(month => CronValidators.validateMonth(month));
+    months.forEach((month) => CronValidators.validateMonth(month));
     this.schedule.month = CronUtils.formatCronPart(months);
     return this;
   }
@@ -226,9 +230,15 @@ export class CronExpressionBuilder {
     // Construct the cron expression using the defined schedule parts
     const minute = this.getCronPart('minute', this.schedule.minute || '*');
     const hour = this.getCronPart('hour', this.schedule.hour || '*');
-    const dayOfMonth = this.getCronPart('dayOfMonth', this.schedule.dayOfMonth || '*');
+    const dayOfMonth = this.getCronPart(
+      'dayOfMonth',
+      this.schedule.dayOfMonth || '*',
+    );
     const month = this.getCronPart('month', this.schedule.month || '*');
-    const dayOfWeek = this.getCronPart('dayOfWeek', this.schedule.dayOfWeek || '*');
+    const dayOfWeek = this.getCronPart(
+      'dayOfWeek',
+      this.schedule.dayOfWeek || '*',
+    );
 
     // Assemble the cron expression
     return `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`;

@@ -1,4 +1,9 @@
-export type ScheduleUnit = 'minute' | 'hour' | 'dayOfMonth' | 'month' | 'dayOfWeek' ;
+export type ScheduleUnit =
+  | 'minute'
+  | 'hour'
+  | 'dayOfMonth'
+  | 'month'
+  | 'dayOfWeek';
 export type ScheduleValue = string | number;
 
 export interface Schedule {
@@ -15,5 +20,5 @@ export enum CronTimeUnit {
   Hour = 'hour',
   DayOfMonth = 'dayOfMonth',
   Month = 'month',
-  DayOfWeek = 'dayOfWeek'
+  DayOfWeek = 'dayOfWeek',
 }
