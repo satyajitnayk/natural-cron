@@ -1,4 +1,4 @@
-# Natural Cron
+# Natural Cron ⏰⏰
 
 Natural Cron is a easy-to-use Node.js library for creating and validating cron expressions with natural, human-readable APIs.
 
@@ -100,4 +100,4 @@ Contributions are welcome! Please feel free to submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
+This project is licensed under the MIT License.
