@@ -1,9 +1,4 @@
-import {
-  Schedule,
-  ScheduleUnit,
-  CronTimeUnit,
-  ScheduleValue,
-} from './interfaces';
+import { Schedule, ScheduleUnit, CronTimeUnit } from './interfaces';
 import { CronValidators } from './cron-validators';
 import { CronUtils } from './cron-utils';
 
@@ -11,7 +6,7 @@ import { CronUtils } from './cron-utils';
  * Class to construct a cron expression with a fluent API.
  */
 export class CronExpressionBuilder {
-  private schedule: Schedule;
+  private readonly schedule: Schedule;
 
   /**
    * Initializes a new instance of the CronExpressionBuilder class.
@@ -27,7 +22,7 @@ export class CronExpressionBuilder {
    * wildcards '*' for other fields to represent "every" value.
    */
   private ensureDefaultValues(): void {
-    CronUtils.setDefault(this.schedule, 'minute', '0');
+    CronUtils.setDefault(this.schedule, 'minute', '*');
     CronUtils.setDefault(this.schedule, 'hour', '*');
     CronUtils.setDefault(this.schedule, 'dayOfMonth', '*');
     CronUtils.setDefault(this.schedule, 'month', '*');
@@ -53,7 +48,6 @@ export class CronExpressionBuilder {
   atHours(hours: number[]): this {
     hours.forEach((hour) => CronValidators.validateHour(hour));
     this.schedule.hour = CronUtils.formatCronPart(hours);
-    // Set the minutes to '0' if they haven't been defined yet
     if (this.schedule.minute === undefined) {
       this.schedule.minute = '0';
     }
@@ -88,7 +82,6 @@ export class CronExpressionBuilder {
    */
   every(unit: string): this {
     CronValidators.validateTimeUnit(unit);
-    this.ensureDefaultValues();
 
     // Set the appropriate cron syntax for the unit
     switch (unit) {
@@ -121,11 +114,6 @@ export class CronExpressionBuilder {
         break;
     }
 
-    // Ensure other fields are not inadvertently set to restrictive values
-    this.schedule.month = this.schedule.month || '*';
-    this.schedule.dayOfMonth = this.schedule.dayOfMonth || '*';
-    this.schedule.dayOfWeek = this.schedule.dayOfWeek || '*';
-
     return this;
   }
 
@@ -136,7 +124,6 @@ export class CronExpressionBuilder {
    * @returns {this} The instance of CronExpressionBuilder for chaining.
    */
   everyX(interval: number, unit: ScheduleUnit): this {
-    this.ensureDefaultValues(); // Ensure defaults before changes
     // Validate the interval based on the unit
     switch (unit) {
       case CronTimeUnit.Minute:
@@ -169,13 +156,6 @@ export class CronExpressionBuilder {
         this.schedule.dayOfWeek = `*/${interval}`;
         break;
     }
-
-    // Reset other parts of the schedule to wildcard if not specified
-    this.schedule.minute = this.schedule.minute || '*';
-    this.schedule.hour = this.schedule.hour || '*';
-    this.schedule.dayOfMonth = this.schedule.dayOfMonth || '*';
-    this.schedule.month = this.schedule.month || '*';
-    this.schedule.dayOfWeek = this.schedule.dayOfWeek || '*';
 
     return this;
   }
@@ -213,32 +193,18 @@ export class CronExpressionBuilder {
   }
 
   /**
-   * Helper method to get the cron part for a given unit.
-   * @param {ScheduleUnit} unit - The unit of the schedule.
-   * @param {ScheduleValue} value - The value for the schedule unit.
-   * @returns {string} The cron syntax part for the unit.
-   */
-  private getCronPart(unit: ScheduleUnit, value: ScheduleValue): string {
-    return Array.isArray(value) ? value.join(',') : value.toString();
-  }
-
-  /**
    * Compiles the individual parts of the schedule into a cron expression.
    * @returns {string} The cron expression representing the schedule.
    */
   public compile(): string {
+    this.ensureDefaultValues();
+
     // Construct the cron expression using the defined schedule parts
-    const minute = this.getCronPart('minute', this.schedule.minute || '*');
-    const hour = this.getCronPart('hour', this.schedule.hour || '*');
-    const dayOfMonth = this.getCronPart(
-      'dayOfMonth',
-      this.schedule.dayOfMonth || '*',
-    );
-    const month = this.getCronPart('month', this.schedule.month || '*');
-    const dayOfWeek = this.getCronPart(
-      'dayOfWeek',
-      this.schedule.dayOfWeek || '*',
-    );
+    const minute = this.schedule.minute;
+    const hour = this.schedule.hour;
+    const dayOfMonth = this.schedule.dayOfMonth;
+    const month = this.schedule.month;
+    const dayOfWeek = this.schedule.dayOfWeek;
 
     // Assemble the cron expression
     return `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`;
