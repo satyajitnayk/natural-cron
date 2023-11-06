@@ -51,7 +51,7 @@ const schedule = new  CronExpressionBuilder();
 | Run at 9 AM, 12 PM, and 3 PM every day             | `schedule.every('day').atHours([9, 12, 15]).compile();`                                                       | `0 9,12,15 * * *`      |
 | Run at 7 AM, 2 PM, and 10 PM on Tuesdays           | `schedule.atHours([7, 14, 22]).onWeekDays([2]).compile();`                                                    | `0 7,14,22 * * 2`      |
 | Run at 20 past every hour on the 5th of July       | `schedule.atMinutes([20]).onDaysOfMonth([5]).duringMonths([7]).compile();`                                    | `20 * 5 7 *`           |
-| Run every 5 minutes during office hours - every()  | `schedule.every('minute').atMinutes([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]).atHours([9-16]).compile();` | `0,5,10,15,20,25,30,35,40,45,50,55 9-16 * * *`       |
+| Run every 5 minutes during office hours - every()  | `schedule.every('minute').atMinutes([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]).atHours([9, 10, 11, 12, 13, 14, 15, 16]).compile();` | `0,5,10,15,20,25,30,35,40,45,50,55 9-16 * * *`       |
 | Run every 5 minutes during office hours - everyX() | `schedule.everyX(5,CronTimeUnit.Minute).atHours([9, 10, 11, 12, 13, 14, 15, 16]).compile()` | `*/5 9-16 * * *`       |
 | Run at quarter past and quarter to every hour      | `schedule.every('hour').atMinutes([15, 45]).compile();`                                                        | `15,45 * * * *`        |
 
