@@ -32,6 +32,13 @@ const { CronExpressionBuilder, CronValidators } = require('natural-cron');
 const schedule = new  CronExpressionBuilder();
 ```
 
+### Using commonly used predefined cron expressions
+```ts
+const { SCHEDULES } = require('natural-cron');
+const exp1 = SCHEDULES.EVERY_30_SECONDS;
+const exp2 = SCHEDULES.EVERY_2ND_HOUR_FROM_1AM_THROUGH_11PM;
+```
+
 ## 📋 Examples Table
 
 | 📅 Description                                     | 💻 Code Example                                                                                                     | ⏰ Cron Expression      |
