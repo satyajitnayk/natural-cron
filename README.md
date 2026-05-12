@@ -100,6 +100,8 @@ Static methods for validating cron expression components.
 - `validateMonth(month: number)`
 - `validateDayOfWeek(day: number)`
 - `validateTime(time: string)`
+- `validateExpression(expression: string)` - Validate a full 5-field or 6-field cron expression
+- `isValidExpression(expression: string)` - Return `true` when a full cron expression is valid
 
 ## Contributing
 
