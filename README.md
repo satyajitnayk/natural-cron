@@ -130,6 +130,29 @@ CronExpressionParser.parse('*/30 * * * * *');
 // }
 ```
 
+#### CronExpressionDescriber
+
+Static methods for describing valid cron expressions in human-readable language.
+
+- `describe(expression: string)` - Describe a valid 5-field or 6-field cron expression
+
+```typescript
+CronExpressionDescriber.describe('0 9 * * 1-5');
+// "At 09:00, Monday through Friday"
+
+CronExpressionDescriber.describe('*/15 * * * *');
+// "Every 15 minutes"
+```
+
+#### describeCron
+
+Helper function for describing valid cron expressions.
+
+```typescript
+describeCron('30 17 * * *');
+// "At 17:30 every day"
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a pull request.
