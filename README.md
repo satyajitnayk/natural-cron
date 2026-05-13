@@ -103,6 +103,33 @@ Static methods for validating cron expression components.
 - `validateExpression(expression: string)` - Validate a full 5-field or 6-field cron expression
 - `isValidExpression(expression: string)` - Return `true` when a full cron expression is valid
 
+#### CronExpressionParser
+
+Static methods for parsing valid cron expressions into named fields.
+
+- `parse(expression: string)` - Parse a valid 5-field or 6-field cron expression
+
+```typescript
+CronExpressionParser.parse('0 9 * * 1-5');
+// {
+//   minute: '0',
+//   hour: '9',
+//   dayOfMonth: '*',
+//   month: '*',
+//   dayOfWeek: '1-5'
+// }
+
+CronExpressionParser.parse('*/30 * * * * *');
+// {
+//   second: '*/30',
+//   minute: '*',
+//   hour: '*',
+//   dayOfMonth: '*',
+//   month: '*',
+//   dayOfWeek: '*'
+// }
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a pull request.

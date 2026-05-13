@@ -15,6 +15,22 @@ export interface Schedule {
   dayOfWeek?: ScheduleValue;
 }
 
+export interface ParsedCronExpression {
+  minute: string;
+  hour: string;
+  dayOfMonth: string;
+  month: string;
+  dayOfWeek: string;
+}
+
+export interface ParsedCronExpressionWithSeconds extends ParsedCronExpression {
+  second: string;
+}
+
+export type ParsedCronSchedule =
+  | ParsedCronExpression
+  | ParsedCronExpressionWithSeconds;
+
 export enum CronTimeUnit {
   Minute = 'minute',
   Hour = 'hour',
