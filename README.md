@@ -100,6 +100,58 @@ Static methods for validating cron expression components.
 - `validateMonth(month: number)`
 - `validateDayOfWeek(day: number)`
 - `validateTime(time: string)`
+- `validateExpression(expression: string)` - Validate a full 5-field or 6-field cron expression
+- `isValidExpression(expression: string)` - Return `true` when a full cron expression is valid
+
+#### CronExpressionParser
+
+Static methods for parsing valid cron expressions into named fields.
+
+- `parse(expression: string)` - Parse a valid 5-field or 6-field cron expression
+
+```typescript
+CronExpressionParser.parse('0 9 * * 1-5');
+// {
+//   minute: '0',
+//   hour: '9',
+//   dayOfMonth: '*',
+//   month: '*',
+//   dayOfWeek: '1-5'
+// }
+
+CronExpressionParser.parse('*/30 * * * * *');
+// {
+//   second: '*/30',
+//   minute: '*',
+//   hour: '*',
+//   dayOfMonth: '*',
+//   month: '*',
+//   dayOfWeek: '*'
+// }
+```
+
+#### CronExpressionDescriber
+
+Static methods for describing valid cron expressions in human-readable language.
+
+- `describe(expression: string)` - Describe a valid 5-field or 6-field cron expression
+
+```typescript
+CronExpressionDescriber.describe('0 9 * * 1-5');
+// "At 09:00, Monday through Friday"
+
+CronExpressionDescriber.describe('*/15 * * * *');
+// "Every 15 minutes"
+```
+
+#### describeCron
+
+Helper function for describing valid cron expressions.
+
+```typescript
+describeCron('30 17 * * *');
+// "At 17:30 every day"
+```
 
 ## Contributing
 

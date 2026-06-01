@@ -1,4 +1,17 @@
 export class CronValidators {
+  private static readonly cronFields = [
+    { name: 'minute', min: 0, max: 59 },
+    { name: 'hour', min: 0, max: 23 },
+    { name: 'day of month', min: 1, max: 31 },
+    { name: 'month', min: 1, max: 12 },
+    { name: 'day of week', min: 0, max: 6 },
+  ];
+
+  private static readonly cronFieldsWithSeconds = [
+    { name: 'second', min: 0, max: 59 },
+    ...CronValidators.cronFields,
+  ];
+
   /**
    * Validates if the given minute is within the cron range of 0 to 59.
    * @param {number} minute - The minute value to validate.
@@ -86,5 +99,159 @@ export class CronValidators {
     if (!validUnits.includes(unit)) {
       throw new Error(`Invalid time unit for cron: ${unit}`);
     }
+  }
+
+  /**
+   * Validates a full cron expression with either 5 fields or 6 fields when seconds are included.
+   * @param {string} expression - The cron expression to validate.
+   * @throws Will throw an error if the expression is not valid cron syntax.
+   */
+  static validateExpression(expression: string): void {
+    if (typeof expression !== 'string' || expression.trim().length === 0) {
+      throw new Error('Invalid cron expression: expression must not be empty.');
+    }
+
+    const parts = expression.trim().split(/\s+/);
+
+    if (parts.length !== 5 && parts.length !== 6) {
+      throw new Error(
+        `Invalid cron expression: expected 5 or 6 fields, received ${parts.length}.`,
+      );
+    }
+
+    const fields =
+      parts.length === 6
+        ? CronValidators.cronFieldsWithSeconds
+        : CronValidators.cronFields;
+
+    parts.forEach((part, index) => {
+      const field = fields[index];
+      CronValidators.validateCronField(part, field.name, field.min, field.max);
+    });
+  }
+
+  /**
+   * Checks whether a full cron expression is valid.
+   * @param {string} expression - The cron expression to validate.
+   * @returns {boolean} True when the expression is valid.
+   */
+  static isValidExpression(expression: string): boolean {
+    try {
+      CronValidators.validateExpression(expression);
+      return true;
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  private static validateCronField(
+    value: string,
+    fieldName: string,
+    min: number,
+    max: number,
+  ): void {
+    const listParts = value.split(',');
+
+    if (listParts.some((part) => part.length === 0)) {
+      throw new Error(`Invalid ${fieldName}: ${value}. Empty list item found.`);
+    }
+
+    listParts.forEach((part) => {
+      CronValidators.validateCronFieldPart(part, fieldName, min, max);
+    });
+  }
+
+  private static validateCronFieldPart(
+    value: string,
+    fieldName: string,
+    min: number,
+    max: number,
+  ): void {
+    const stepParts = value.split('/');
+
+    if (stepParts.length > 2 || stepParts.some((part) => part.length === 0)) {
+      throw new Error(`Invalid ${fieldName}: ${value}. Invalid step syntax.`);
+    }
+
+    const [base, step] = stepParts;
+
+    if (step !== undefined) {
+      CronValidators.validateCronNumber(step, fieldName, 1, max);
+    }
+
+    if (base === '*') {
+      return;
+    }
+
+    if (base.includes('-')) {
+      CronValidators.validateCronRange(base, fieldName, min, max);
+      return;
+    }
+
+    CronValidators.validateCronNumber(base, fieldName, min, max);
+  }
+
+  private static validateCronRange(
+    value: string,
+    fieldName: string,
+    min: number,
+    max: number,
+  ): void {
+    const rangeParts = value.split('-');
+
+    if (
+      rangeParts.length !== 2 ||
+      rangeParts[0].length === 0 ||
+      rangeParts[1].length === 0
+    ) {
+      throw new Error(`Invalid ${fieldName}: ${value}. Invalid range syntax.`);
+    }
+
+    const [startValue, endValue] = rangeParts;
+    const start = CronValidators.validateCronNumber(
+      startValue,
+      fieldName,
+      min,
+      max,
+    );
+    const end = CronValidators.validateCronNumber(
+      endValue,
+      fieldName,
+      min,
+      max,
+    );
+
+    if (start > end) {
+      throw new Error(
+        `Invalid ${fieldName}: ${value}. Range start should be less than or equal to range end.`,
+      );
+    }
+  }
+
+  private static validateCronNumber(
+    value: string,
+    fieldName: string,
+    min: number,
+    max: number,
+  ): number {
+    if (!/^\d+$/.test(value)) {
+      throw new Error(
+        `Invalid ${fieldName}: ${value}. Value should be an integer.`,
+      );
+    }
+
+    const numberValue = Number(value);
+
+    if (
+      !Number.isInteger(numberValue) ||
+      numberValue < min ||
+      numberValue > max
+    ) {
+      throw new Error(
+        `Invalid ${fieldName}: ${value}. Value should be between ${min} and ${max}.`,
+      );
+    }
+
+    return numberValue;
   }
 }
